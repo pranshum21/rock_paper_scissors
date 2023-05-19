@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Game!!</title>
+
+    <style>
+        
+body{
+    background-color: rgba(0, 0, 0, 0.916);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.rock-img{
+    height: 50px;
+     
+}
+.rock-button{
+    background-color: transparent;
+    border: 3px solid white;
+    border-radius: 120px;
+    height: 120px;
+    width: 120px;
+    margin-right:  30px; ;
+    cursor: pointer;
+}
+.result{
+    font-size: 30px;
+    font-weight: bold;
+
+}
+.move{
+    margin-bottom:70px;
+}
+.reset{
+    background-color: rgba(255, 255, 0, 0.753);
+    color: rgb(1, 0, 0);
+    padding: 5px 10px;
+    border: none;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+   
+
+            <h1> Rock Paper Scissors</h1>
+    <button class="rock-button"onclick="game('Rock');"><img class="rock-img" src="images/Rock.png"></button>
+    <button class="rock-button" onclick="game('Paper');"><img class="rock-img" src="images/Paper.png"></button>
+    <button class="rock-button"onclick="game('Scissors');"><img class="rock-img" src="images/Scissors.png"></button>
+    <p class="result"></p>
+    <p class="move"></p>
+    <p class="score"></p>
+    <button class="reset" onclick="
+    score.win=0;
+    score.lose=0;
+    score.tie=0;
+    localStorage.setItem('score',JSON.stringify(score));
+    document.querySelector('.score').innerHTML=`Win:${score.win} lose:${score.lose} tie:${score.tie}`">Reset Score</button>
+    <button class="reset" onclick=" playermove =computermovegenerator();game(playermove);">Auto play one time</button>
+    <button class="reset" onclick=" autoplay(); "> Auto play</button>
+       
+    
+    <script >
+        let computermove,result;
+        // let score = {
+        //     win:0,
+        //     lose:0,
+        //     tie:0
+        // }
+        let score =JSON.parse(localStorage.getItem('score'))||{
+            win:0,
+            lose:0,
+            tie:0
+        };
+        function game(playermove){
+            computermove =computermovegenerator();
+            result = check(playermove,computermove);
+            scorecal(result);
+            if(result==='tie'){
+                document.querySelector('.result').innerHTML=`Tie.`
+            }
+            else{
+            document.querySelector('.result').innerHTML=`You ${result}.`}
+            document.querySelector('.move').innerHTML=`You <img class="rock-img" src="images/${playermove}.png">  <img class="rock-img" src="images/${computermove}.png"> Computer`
+            document.querySelector('.score').innerHTML=`Wins:${score.win} loses:${score.lose} ties:${score.tie}`
+
+           
+           
+
+        }
+        function computermovegenerator(){
+            let number = Math.random();
+            if(number<1/3){
+                return 'Rock';
+            }
+            else if(number<2/3){
+              return 'Paper';
+            }
+            else{
+            return 'Scissors';
+            }
+        }
+
+
+        function check(playermove,computermove){
+            if(playermove==='Rock'){
+                if(computermove==='Rock'){
+                    return 'tie';
+                }
+                else if(computermove==='Paper'){
+                    return 'lose'
+                }
+                else if (computermove==='Scissors'){
+                    return 'win';
+                }
+            }
+            if(playermove==='Paper'){
+                if(computermove==='Rock'){
+                    return 'win';
+                }
+                else if(computermove==='Paper'){
+                    return 'tie'
+                }
+                else if (computermove==='Scissors'){
+                    return 'lose';
+                }
+            }
+            if(playermove==='Scissors'){
+                if(computermove==='Rock'){
+                    return 'lose';
+                }
+                else if(computermove==='Paper'){
+                    return 'win'
+                }
+                else if (computermove==='Scissors'){
+                    return 'tie';
+                }
+            }
+        }
+
+
+        function scorecal(result){
+            if(result==='win'){
+                score.win++;
+            }
+            else if(result==='lose'){
+                score.lose++;
+            }
+            else if (result==='tie'){
+                score.tie++;
+            }
+            localStorage.setItem('score',JSON.stringify(score))
+        }
+        let run = false;
+        let intervalid;
+        function autoplay(){
+            if(!run){
+          
+            intervalid=setInterval(function(){ 
+                playermove =computermovegenerator();
+                game(playermove);},1000);
+            run = true;}
+            else if(run){
+                clearInterval(intervalid);
+                run = false;
+
+            }
+        }
+
+
+
+
+        
+
+    </script>
+</body>
+
+</html>
